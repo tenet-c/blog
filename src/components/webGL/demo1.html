@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <button>自转</button>
+</body>
+<script src="https://threejs.org/build/three.js"></script>
+<script>
+/**
+ * 场景
+*/
+const scene = new THREE.Scene()
+
+/**
+ * 透视相机
+ * @param number 视角 45度
+ * @param number 纵横比 取得屏幕值
+ * @param number 近距离
+ * @param nummer 远距离
+*/
+const camera = new THREE.PerspectiveCamera(45,window.innerWidth/innerHeight,1,1000)
+
+/**
+ * 渲染器
+*/
+
+const renderer = new THREE.WebGLRenderer({
+  antialias:true // 抗锯齿
+})
+renderer.setSize(window.innerWidth,window.innerHeight)
+// 构建个canvas
+document.body.appendChild(renderer.domElement)
+// 立方体
+const geometry = new THREE.BoxGeometry(1,1,1)
+// 材质
+const material = new THREE.MeshBasicMaterial({
+  color:0x28aaaa,
+  wireframe:true // 使空间不填充 边框的形式
+})
+// 背景色
+// renderer.setClearColor(0xffffff)
+
+const cube = new THREE.Mesh(geometry,material)
+
+// 更改相机位置
+camera.position.z = 4
+cube.rotation.y = 1
+scene.add(cube)
+renderer.render(scene,camera)
+
+// 旋转动画 类似自增
+function animate(){
+  requestAnimationFrame(animate) // 可以和浏览器的渲染频率保持一致
+  cube.rotation.y += 0.01
+  cube.rotation.x += 0.01
+  renderer.render(scene,camera)
+}
+document.querySelector('button').addEventListener('click',animate)
+//animate()
+</script>
+</html>

@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  
+</body>
+<script src="https://threejs.org/build/three.js"></script>
+<script src="./TrackballControls.js"></script>
+<script>
+  // 全局变量 场景 相机 几何体 材质 渲染器 控制器
+  let scene, camera, geometry, mesh, render, controls
+
+  // 初始化渲染器
+  function initRender(){
+    render = new THREE.WebGLRenderer({
+      antialias:true // 抗锯齿
+    })
+    render.setSize(window.innerWidth,window.innerHeight)
+    render.setPixelRatio(window.devicePixelRatio) // 高清显示 传入设备分辨率
+    document.body.appendChild(render.domElement)
+  }
+
+  //初始化场景
+  function initScene(){
+    scene = new THREE.Scene()
+    // 辅助坐标器
+    const axesHelper = new THREE.AxesHelper(100)
+    scene.add(axesHelper)
+  }
+
+  // 初始相机 和 控制器
+  function initCamera(){
+    camera = new THREE.PerspectiveCamera(45,window.innerWidth/innerHeight,1,1000)
+    camera.position.set(0,0,15) 
+    //控制器 参数 相机和 渲染dom
+    controls = new THREE.TrackballControls(camera,render.domElement)
+  }
+
+  // 模型
+  function initMesh(){
+    geometry = new THREE.BoxGeometry(1,1,1)
+    // 光追
+    // meterial = new THREE.MeshNormalMaterial()
+
+    // 模型纹理
+    const texture = new THREE.TextureLoader().load('https://upload-images.jianshu.io/upload_images/27050497-419423ec6b65e244.gif?imageMogr2/auto-orient/strip')
+    meterial = new THREE.MeshBasicMaterial({
+      map:texture,
+      side:THREE.DoubleSide
+    })
+    mesh = new THREE.Mesh(geometry,meterial)
+    scene.add(mesh)
+  }
+
+  // 初始化动画
+  function animate(){
+    requestAnimationFrame(animate) // 可以在浏览器空闲时间调用式浏览器的渲染频率保持一致
+    controls.update()
+    render.render(scene,camera)
+  }
+
+  function init(){
+    initRender()
+    initScene()
+    initCamera()
+    initMesh()
+    animate()
+  }
+  init()
+</script>
+</html>
